@@ -1,0 +1,6 @@
+#ifndef _MINIGL_CONSTANTS_H_
+#define _MINIGL_CONSTANTS_H_
+
+
+
+#endif // _MINIGL_CONSTANTS_H_
