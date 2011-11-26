@@ -16,6 +16,11 @@ The iOS app runs only on the device. Simulator is not supported.
 
 To run the Mac OS X app please adjust the path to the point data ("AppCore.cpp" line 50).
 
-## Author
+## Contact
 
-Lars Schneider <larsxschneider+github@gmail.com>
+Lars Schneider <larsxschneider+ivoxel@gmail.com>
+
+
+## License
+
+iVoxel is available under the BSD license. See the LICENSE file for more info.

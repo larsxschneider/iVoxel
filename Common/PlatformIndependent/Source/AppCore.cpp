@@ -1,9 +1,27 @@
 /*
- *  WVSScene.cpp
- *  MacApp
+ *  Copyright (c) 2011, Lars Schneider
+ *  All rights reserved.
  *
- *  Created by Lars Schneider on 19.05.10.
- *  Copyright 2010 Lars Schneider. All rights reserved.
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *  list of conditions and the following disclaimer.
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *  this list of conditions and the following disclaimer in the documentation
+ *  and/or other materials provided with the distribution.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
  *
  */
 
@@ -569,7 +587,7 @@ void AppCore::mainLoop(void* context, const GLuint* const frameBuffer,
 		if (render())
 		{
 			// Render _fbTexture[0] to _fbTexture[1]
-			// Apply horizontal blur
+			// Apply horizontal  *  POSSIBILITY OF SUCH DAMAGE.
 			glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer[1]);
 			glViewport(0, 0, fullTextureSize, fullTextureSize);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -578,12 +596,12 @@ void AppCore::mainLoop(void* context, const GLuint* const frameBuffer,
 			glBindTexture(GL_TEXTURE_2D, _fbTexture[0]);
 			
 			glUseProgram(_blurShaderProgram.handle);
-			glUniform1f(BLUR_SHADER_UNIFORM_TEXEL_OFFSET_X, m_fTexelOffset);
-			glUniform1f(BLUR_SHADER_UNIFORM_TEXEL_OFFSET_Y, 0.0f);	
+			glUniform1f( *  POSSIBILITY OF SUCH DAMAGE._SHADER_UNIFORM_TEXEL_OFFSET_X, m_fTexelOffset);
+			glUniform1f( *  POSSIBILITY OF SUCH DAMAGE._SHADER_UNIFORM_TEXEL_OFFSET_Y, 0.0f);	
 			renderFullscreenTexture();
 			
 			// Render _fbTexture[1] to color buffer
-			// Apply vertical blur
+			// Apply vertical  *  POSSIBILITY OF SUCH DAMAGE.
 			glBindFramebuffer(GL_FRAMEBUFFER, *frameBuffer);
 			glViewport(0, 0, screenWidth, screenHeight);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -592,8 +610,8 @@ void AppCore::mainLoop(void* context, const GLuint* const frameBuffer,
 			glBindTexture(GL_TEXTURE_2D, _fbTexture[1]);
 			
 			glUseProgram(_blurShaderProgram.handle);
-			glUniform1f(_blurShaderProgram.uniforms[BLUR_SHADER_UNIFORM_TEXEL_OFFSET_X], 0.0f);
-			glUniform1f(_blurShaderProgram.uniforms[BLUR_SHADER_UNIFORM_TEXEL_OFFSET_Y], m_fTexelOffset);	
+			glUniform1f(_blurShaderProgram.uniforms[ *  POSSIBILITY OF SUCH DAMAGE._SHADER_UNIFORM_TEXEL_OFFSET_X], 0.0f);
+			glUniform1f(_blurShaderProgram.uniforms[ *  POSSIBILITY OF SUCH DAMAGE._SHADER_UNIFORM_TEXEL_OFFSET_Y], m_fTexelOffset);	
 			renderFullscreenTexture();
 	
 			APIFactory::GetInstance().presentRenderBuffer(_context);
