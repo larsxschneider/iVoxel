@@ -946,9 +946,9 @@ void Octree::calcCenterOfChildNode(	FIXPVECTOR3* const center,
 void Octree::addPoint(const WVSPoint* const point)
 {
 	// Transform floating point vector in fix point format
-	const FIXPVECTOR3 position = {	roundf(point->position.x),
-									roundf(point->position.y),
-									roundf(point->position.z) };
+	const FIXPVECTOR3 position = {	static_cast<int32_t>(roundf(point->position.x)),
+									static_cast<int32_t>(roundf(point->position.y)),
+									static_cast<int32_t>(roundf(point->position.z)) };
 	
 	// Check if the point is within the octree bounds
 	if (!(	(-OCTREE_WORLD_HALF_EDGE_LENGTH < position.x) && 
@@ -1131,7 +1131,7 @@ void Octree::countRenderBufferPoints(
 	// Early exit if we reached maxPoint Count
 	if (*_voxelCount > maxPointCount) return;
 
-	const VECTOR3 floatingNodeCenter = {nodeCenter->x, nodeCenter->y, nodeCenter->z};
+	const VECTOR3 floatingNodeCenter = {static_cast<float>(nodeCenter->x), static_cast<float>(nodeCenter->y), static_cast<float>(nodeCenter->z)};
 
 	// If it is not known if the node is inside or outside the view frustum, check it
 	if (nodeViewFrustumRelation == MiniGL::ViewFrustum::INTERSECT)
@@ -1198,7 +1198,7 @@ void Octree::copyPointsToBuffer(
 	// Early exit if rendering was canceled
 	if (*_bufferFlags & OCTREE_RENDERING_CANCELED) return;
 	
-	const VECTOR3 floatingNodeCenter = {nodeCenter->x, nodeCenter->y, nodeCenter->z};
+	const VECTOR3 floatingNodeCenter = {static_cast<float>(nodeCenter->x), static_cast<float>(nodeCenter->y), static_cast<float>(nodeCenter->z)};
 
 	// If it is not known if the node is inside or outside the view frustum, check it
 	if (nodeViewFrustumRelation == MiniGL::ViewFrustum::INTERSECT)
@@ -1487,7 +1487,7 @@ void Octree::copyPointsToBuffer(
 				calcCenterOfChildNode(&(childCenter[i]), i, level+1);
 			
 				// TODO: This calcluation is done twice. Room for improvement
-				const VECTOR3 floatChildNodeCenter = {childCenter[i].x, childCenter[i].y, childCenter[i].z};
+				const VECTOR3 floatChildNodeCenter = {static_cast<float>(childCenter[i].x), static_cast<float>(childCenter[i].y), static_cast<float>(childCenter[i].z)};
 				dist[i] = _renderViewFrustum->squaredDistanceToCamera(&floatChildNodeCenter);
 			}
 		}
