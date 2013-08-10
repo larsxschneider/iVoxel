@@ -79,7 +79,7 @@ public:
 	static const uint8_t	OCTREE_RENDERING_CANCELED			= 0x2;
 	static const uint8_t	OCTREE_REGION_ORGIN_INVALID			= 0x4;
 
-	typedef struct QuantPointBlock
+	struct QuantPointBlock
 	{
 		QuantPoint			points[OCTREE_POINTS_PER_POINT_DATA_BLOCK];
 		QuantPointBlock*	next;
@@ -90,7 +90,7 @@ public:
 		}
 	};
 	
-	typedef struct Node
+	struct Node
 	{
 		Node*				prevUsedNode;					// 4 byte
 		Node*				nextUsedNode;					// 8 byte
@@ -146,7 +146,7 @@ public:
 	};
 	
 	
-	typedef struct FIXPVECTOR3
+	struct FIXPVECTOR3
 	{
 		int32_t x;	/*!< x coordinate */
 		int32_t y;	/*!< y coordinate */
@@ -154,7 +154,7 @@ public:
 	};
 	
 	
-	typedef struct CachedNode
+	struct CachedNode
 	{
 		Node*						node;
 		FIXPVECTOR3					center;

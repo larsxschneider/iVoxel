@@ -51,7 +51,7 @@ class ViewFrustum
 
 public:
     
-    typedef enum PlaneType
+    enum PlaneType
 	{
 		LEFT_PLANE_ID	=  0,
 		RIGHT_PLANE_ID  =  1,
@@ -72,7 +72,7 @@ public:
     static const int NC  =  8;
     static const int FC  =  9;
 	
-	typedef enum Relation
+	enum Relation
 	{
 		OUT = -1,
 		INTERSECT = 0,

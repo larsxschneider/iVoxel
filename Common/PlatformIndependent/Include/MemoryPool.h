@@ -43,7 +43,7 @@ class MemoryPool
 	// Every bin saves the last 1024 free blocks
 	static const uint16_t INDEX_WITH_FREE_BLOCK_COUNT = 1024;
 
-	typedef struct MemoryBin
+	struct MemoryBin
 	{
 		uint8_t*	index;
 		uint8_t*	indexWithFreeBlock[INDEX_WITH_FREE_BLOCK_COUNT];
