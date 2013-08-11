@@ -780,7 +780,7 @@ void Octree::swapLeastRecentlyUsedNodesToBackingStore()
 }
 
 
-const QuantPoint::PositionNormal Octree::quantizeRelativePosition(
+const QuantPoint::PositionRColorBlock Octree::quantizeRelativePosition(
 	const FIXPVECTOR3* const pointPosition,
 	const FIXPVECTOR3* const referenceCenter,
 	const int8_t level) const
@@ -807,7 +807,7 @@ const QuantPoint::PositionNormal Octree::quantizeRelativePosition(
 
 bool Octree::retrieveQuantPointInNode(
 	Node* const node,
-	const QuantPoint::PositionNormal quantizedPosition,
+	const QuantPoint::PositionRColorBlock quantizedPosition,
 	QuantPoint** outQuantPoint)
 {
 	if (node->data == NULL)
@@ -962,10 +962,11 @@ void Octree::addPoint(const WVSPoint* const point)
 		return;
 	}
 	
-	// Quantize color to 15 bpp
-	const uint16_t fiveBitColor =	((point->color.red >> 3) |	
-									((point->color.green >> 3) << 5) |
-									((point->color.blue >> 3) << 10));
+	// Quantize red color channel to 7 bpp
+	const uint16_t redColor7Bit =	point->color.red >> 1;
+
+    const uint16_t greenBlue8Bit =  point->color.green |
+                                   (point->color.blue << 8);
 
 	// Convert radius to int
 	const uint32_t radius = roundf(point->radius);
@@ -1027,13 +1028,12 @@ void Octree::addPoint(const WVSPoint* const point)
 	// Iterate over all LODs and insert the point
 	// Start from finest LOD to coarest LOD
 	// Native bit is set for the finest level
-	uint16_t nativeBit = 1 << 15;
 	QuantPoint* quantPoint;
 
 	while (level > 0)
 	{
 		// Calculate the position within the node
-		QuantPoint::PositionNormal qPos = quantizeRelativePosition(
+		QuantPoint::PositionRColorBlock qPos = quantizeRelativePosition(
 			&(position),
 			&(_insertionNodeCache[level].center),
 			level);
@@ -1041,38 +1041,28 @@ void Octree::addPoint(const WVSPoint* const point)
 		// Get the memory location of that position
 		if (retrieveQuantPointInNode(_insertionNodeCache[level].node, qPos, &quantPoint))
 		{
-			// Check if a native point is on your path to the root node			
-			// If yes, we can exit early
-			if ((quantPoint->isNative() == true) && (nativeBit == 0)) return;
-			
-			// No native point on the path. Thus we set the new normal and mix the colors
-			// Attention: We also mix if the point in the octree is native and the point to be
-			// inserted is native --> looks better.
-		
-			// Set normal of the new point
-			quantPoint->positionNormal = qPos | point->normalIndex;
-			
 			// Merge colors
-			static const uint16_t redMask = 31; 
-			static const uint16_t greenMask = 31 << 5;
-			static const uint16_t blueMask = 31 << 10;
-			
-			const uint16_t red = (((quantPoint->colorNative & redMask) + 
-								  (fiveBitColor & redMask)) >> 1) & redMask;
-			const uint16_t green = (((quantPoint->colorNative & greenMask) + 
-									(fiveBitColor & greenMask)) >> 1) & greenMask;
-			const uint16_t blue = (((quantPoint->colorNative & blueMask) + 
-								   (fiveBitColor & blueMask)) >> 1) & blueMask;
-			
-			quantPoint->colorNative = red | green | blue | nativeBit;
+//			static const uint16_t redMask = 127;
+//			static const uint16_t greenMask = 255 << 0;
+//			static const uint16_t blueMask = 255 << 8;
+//
+//			const uint16_t red = (((quantPoint->positionColor & redMask) + 
+//								  (redColor7Bit & redMask)) >> 1) & redMask;
+//			const uint16_t green = (((quantPoint->color & greenMask) +
+//									(greenBlue8Bit & greenMask)) >> 1) & greenMask;
+//			const uint16_t blue = (((quantPoint->color & blueMask) + 
+//								   (greenBlue8Bit & blueMask)) >> 1) & blueMask;
+//
+//            quantPoint->positionColor = qPos | red;
+//			quantPoint->color = green | blue;
 		}
 		else
 		{
 			// Position is not yet occupied in node
 			// Set position, normal
-			quantPoint->positionNormal = qPos | point->normalIndex;
+			quantPoint->positionColor = qPos | redColor7Bit;
 			// Set color and native bit
-			quantPoint->colorNative = fiveBitColor | nativeBit;
+			quantPoint->color = greenBlue8Bit;
 				
 			// Increase quant point count in node
 			++(_insertionNodeCache[level].node->quantPointCount);
@@ -1083,9 +1073,6 @@ void Octree::addPoint(const WVSPoint* const point)
 
 		// Go to next level
 		--level;
-		
-		// All lower levels provide no native point
-		nativeBit = 0;
 	}
 }
 

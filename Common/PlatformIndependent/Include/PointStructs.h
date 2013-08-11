@@ -48,7 +48,6 @@ struct WVSPoint
 {
 	VECTOR3 position;
 	float_t radius;
-	uint8_t normalIndex;
 	RGBColor color;
 };
 
@@ -59,22 +58,16 @@ struct WVSPoint
  */
 struct QuantPoint
 {
-	typedef uint16_t PositionNormal;			//  9bit position + 7bit normal
-	typedef uint16_t ColorNative;				// 15bit color    + 1bit native
+	typedef uint16_t PositionRColorBlock;       //  9bit position + 7bit color
+	typedef uint16_t GBColorBlock;              // 16bit color
 
-	PositionNormal	positionNormal;				// zzzyyyxxxnnnnnnn
-	ColorNative		colorNative;				// nbbbbbgggggrrrrr
-	
-	inline const bool isNative() const
-	{
-		static const uint16_t nativeMask = (1 << 15);
-		return (colorNative & nativeMask);
-	}
+	PositionRColorBlock	positionColor;          // zzzyyyxxxrrrrrrr
+	GBColorBlock        color;                  // ggggggggbbbbbbbb
 	
 	inline const uint16_t getPosition() const
 	{
 		static const uint16_t positionMask = (1 << 16) - (1 << 7);
-		return (positionNormal & positionMask);
+		return (positionColor & positionMask);
 	}
 };
 

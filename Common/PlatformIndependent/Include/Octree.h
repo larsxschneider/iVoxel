@@ -236,7 +236,7 @@ private:
 	
 	bool retrieveQuantPointInNode(
 		Node* const node,
-		const QuantPoint::PositionNormal quantizedPosition,
+		const QuantPoint::PositionRColorBlock quantizedPosition,
 		QuantPoint** outQuantPoint);
 		
 	void writeNodeToDisk(FILE* const file, Node* const node, uint32_t* numberOfPointsWrittenToDisk);
@@ -260,7 +260,7 @@ public:
 	void setVoxelAccuThreshold(const uint16_t threshold);
 #endif
 
-	const QuantPoint::PositionNormal quantizeRelativePosition(
+	const QuantPoint::PositionRColorBlock quantizeRelativePosition(
 		const FIXPVECTOR3* const pointPosition,
 		const FIXPVECTOR3* const referenceCenter,
 		const int8_t level) const;

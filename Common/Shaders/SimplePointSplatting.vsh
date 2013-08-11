@@ -117,14 +117,13 @@ void main()
 		// Frontfacing voxel
 		
 		// Decode color bit pattern
-		// data1.z = gggrrrrr
-		// data1.w = -bbbbbgg
-		//TODO check if data1.w = -ggbbbbb is more efficent?! (same with position)
-		color = vec3(	mod(floor(data1.z), 32.0),
-						8.0 * mod(data1.w, 4.0) + floor(data1.z * 0.03125),
-						mod(floor(data1.w * 0.25), 32.0))
-						* 0.032258064516129;	// = 1/31
-						
+        // data1.x = -rrrrrrr
+		// data1.z = gggggggg
+		// data1.w = bbbbbbbb
+		color = vec3(   mod(floor(data1.x), 128.0) * (1.0 / 127.0),
+                        data1.z * (1.0 / 255.0),
+                        data1.w * (1.0 / 255.0));
+
 		// Transform world space to camera space
 		// TODO: Sparse Matrices
 		// see optimization POWERVR SGX OpenGL ES 2.0 Application Development, page 21
