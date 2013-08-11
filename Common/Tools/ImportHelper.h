@@ -21,6 +21,7 @@ class Octree;
 namespace ImportHelper
 {
 
+void ImportTraian(Octree* octree, const char* const filename);
 void ImportCTFormat(Octree* octree, const char* const filename);
 void ImportRicoFormat(Octree* octree, const char* const filename);
 void ImportPLYFormat(Octree* octree, const char* const filename, const int startbyte, const int vertices);

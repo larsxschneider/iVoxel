@@ -9,6 +9,8 @@
 
 #include "ImportHelper.h"
 #include "Octree.h"
+#include <vector>
+#include <fstream>
 
 
 namespace WVSClientCommon
@@ -17,6 +19,65 @@ namespace WVSClientCommon
 
 namespace ImportHelper
 {
+
+std::vector<std::string> split(const std::string& value, char separator)
+{
+    std::vector<std::string> result;
+    std::string::size_type p = 0;
+    std::string::size_type q;
+    while ((q = value.find(separator, p)) != std::string::npos) {
+        result.emplace_back(value, p, q - p);
+        p = q + 1;
+    }
+    result.emplace_back(value, p);
+    return result;
+}
+
+
+void ImportTraian(Octree* octree, const char* const filename)
+{
+	printf("Reading  %s...\n", filename);
+
+    std::ifstream read(filename, std::ifstream::in | std::ifstream::binary);
+    
+    read.seekg(0, std::ifstream::end);
+    long long file_size = read.tellg();
+    read.seekg(0, std::ifstream::beg);
+
+	WVSPoint p;
+	p.radius = 1.0;
+
+    float progress = 0;
+
+    std::string line;
+    while (std::getline(read, line))
+    {
+        const auto traianPoint = split(line, ' ');
+
+        p.position.x = std::stof(traianPoint[0]);
+        p.position.z = std::stof(traianPoint[1]);
+        p.position.y = std::stof(traianPoint[2]);
+
+        p.color.red = std::stoi(traianPoint[3]);
+        p.color.green = std::stoi(traianPoint[4]);
+        p.color.blue = std::stoi(traianPoint[5]);
+
+        octree->addPoint(&p);
+
+        float current_progress = 100.0f * (float)read.tellg() / (float)file_size;
+
+        if (current_progress > 65.0f)
+        {
+            break;
+        }
+
+        if (roundf(current_progress) > roundf(progress))
+        {
+            progress = current_progress;
+            printf("%.0f \n", progress);
+        } 
+    }
+}
 
 
 void ImportCTFormat(Octree* octree, const char* const filename)
