@@ -226,7 +226,12 @@ void Octree::setVoxelAccuThreshold(const uint16_t threshold)
 }
 #endif
 
-	
+
+#if IMPORT_STATIC_POINT_CLOUD
+static int last_progress = 0;
+#endif
+
+
 void Octree::writeNodeToDisk(FILE* const file, Node* const node, uint32_t* numberOfPointsWrittenToDisk)
 {
 	// Traverse childs first
@@ -256,6 +261,15 @@ void Octree::writeNodeToDisk(FILE* const file, Node* const node, uint32_t* numbe
 			
 			if (node != _rootNode) touchNode(node);
 			if (_mostRecentlyUsedNode != child) freeNodeFromMemory(child);
+
+            #if IMPORT_STATIC_POINT_CLOUD
+            const int progress = (*numberOfPointsWrittenToDisk * 100) / _pointCount;
+            if (progress > last_progress)
+            {
+                last_progress = progress;
+                printf("%i%% to disk\n", progress);
+            }
+            #endif
 		}
 	}
 }
